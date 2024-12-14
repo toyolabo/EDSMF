@@ -29,7 +29,7 @@ scale_factor = 3
 activation = 'GELU'
 
 if fea_num > 8:
-    political = "-political-ensemble-"
+    political = "-political-ensemble-20-Donald-80-Kamala"
 else:
     political = ""
 
@@ -236,8 +236,8 @@ for epoch in range(epochs):
         model_B, valid_index, test_index, model_A=False)
 
     # Weighted ensemble for validation predictions
-    weight_A = 0.6  # Weight for candidate 1 (Trump)
-    weight_B = 0.4  # Weight for candidate 2 (Harris)
+    weight_A = 0.2  # Weight for candidate 1 (Trump)
+    weight_B = 0.8  # Weight for candidate 2 (Harris)
     val_ensemble_predictions = weight_A * val_predictions_A + weight_B * val_predictions_B
 
     # Evaluate the ensemble
