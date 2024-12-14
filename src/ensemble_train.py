@@ -29,7 +29,7 @@ scale_factor = 3
 activation = 'GELU'
 
 if fea_num > 8:
-    political = "-political-ensemble-"
+    political = "-political-ensemble-60-Donald-40-Kamala"
 else:
     political = ""
 
