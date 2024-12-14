@@ -1,0 +1,6 @@
+wandb/
+__pycache__/
+
+dataset/
+ALL.csv
+political_sentiment.csv

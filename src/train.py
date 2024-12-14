@@ -2,36 +2,58 @@ import random
 import numpy as np
 import os
 import torch as torch
+import wandb  # Import wandb
 from load_data import load_EOD_data
 from evaluator import evaluate
 from model import get_loss, StockMixer
 import pickle
-
 
 np.random.seed(123456789)
 torch.random.manual_seed(12345678)
 device = torch.device("cuda") if torch.cuda.is_available() else 'cpu'
 
 data_path = '../dataset'
-market_name = 'NASDAQ'
+market_name = 'SP500' # NASDAQ / SP500 
 relation_name = 'wikidata'
-stock_num = 1026
+stock_num = 497 # NASDAQ (1026) / SP500 (474) / SP500_2024 (497)
 lookback_length = 16
 epochs = 100
-valid_index = 756
-test_index = 1008
-fea_num = 5
-market_num = 20
+clip = 0 # SP500 (915)
+valid_index = 1560 # NASDAQ (756) / SP500 (1006)
+test_index = 1948 # NASDAQ (756 + 252 = 1008) / SP500 (1006 + 253 = 1259)
+fea_num = 11 # Number of features in consideration
+market_num = 8 # NASDAQ (20) / SP500 (8)
 steps = 1
 learning_rate = 0.001
 alpha = 0.1
 scale_factor = 3
 activation = 'GELU'
 
+if fea_num > 8:
+    political = "-political-new-architecure"
+else:
+    political = ""
+
+# Initialize wandb
+wandb.init(project='stock-prediction', name='stock-mixer-run-' + market_name + political)
+wandb.config.update({
+    "epochs": epochs,
+    "learning_rate": learning_rate,
+    "lookback_length": lookback_length,
+    "alpha": alpha,
+    "scale_factor": scale_factor,
+    "activation": activation,
+    "market_name": market_name,
+    "fea_num": fea_num,
+})
+
 dataset_path = '../dataset/' + market_name
 if market_name == "SP500":
-    data = np.load('../dataset/SP500/SP500.npy')
-    data = data[:, 915:, :]
+    # data = np.load('../dataset/SP500/my_SP500.npy')
+    # data = np.load('../dataset/SP500/reduced_sp500_2024.npy')
+    data = np.load('../dataset/SP500/reduced_sp500_2024_political.npy')
+    # data = data[:, 915:, :]
+    data = data[:, clip:, :]
     price_data = data[:, :, -1]
     mask_data = np.ones((data.shape[0], data.shape[1]))
     eod_data = data
@@ -76,7 +98,6 @@ def validate(start_index, end_index):
         rank_loss = 0.
         for cur_offset in range(start_index - lookback_length - steps + 1, end_index - lookback_length - steps + 1):
             data_batch, mask_batch, price_batch, gt_batch = map(
-
                 lambda x: torch.Tensor(x).to(device),
                 get_batch(cur_offset)
             )
@@ -142,6 +163,26 @@ for epoch in range(epochs):
     test_loss, test_reg_loss, test_rank_loss, test_perf = validate(test_index, trade_dates)
     print('Test: loss:{:.2e}  =  {:.2e} + alpha*{:.2e}'.format(test_loss, test_reg_loss, test_rank_loss))
 
+    # Log metrics to wandb
+    wandb.log({
+        'epoch': epoch + 1,
+        'Train Loss': tra_loss,
+        'Train Reg Loss': tra_reg_loss,
+        'Train Rank Loss': tra_rank_loss,
+        'Valid Loss': val_loss,
+        'Test Loss': test_loss,
+        'Valid MSE': val_perf['mse'],
+        'Valid IC': val_perf['IC'],
+        'Valid RIC': val_perf['RIC'],
+        'Valid prec@10': val_perf['prec_10'],
+        'Valid SR': val_perf['sharpe5'],
+        'Test MSE': test_perf['mse'],
+        'Test IC': test_perf['IC'],
+        'Test RIC': test_perf['RIC'],
+        'Test prec@10': test_perf['prec_10'],
+        'Test SR': test_perf['sharpe5']
+    })
+
     if val_loss < best_valid_loss:
         best_valid_loss = val_loss
         best_valid_perf = val_perf
@@ -151,3 +192,19 @@ for epoch in range(epochs):
                                                      val_perf['RIC'], val_perf['prec_10'], val_perf['sharpe5']))
     print('Test performance:\n', 'mse:{:.2e}, IC:{:.2e}, RIC:{:.2e}, prec@10:{:.2e}, SR:{:.2e}'.format(test_perf['mse'], test_perf['IC'],
                                                                             test_perf['RIC'], test_perf['prec_10'], test_perf['sharpe5']), '\n\n')
+
+# End of training: Print the best validation and test performance
+print("\n==================== Training Complete ====================")
+print("Best Validation Loss: {:.2e}".format(best_valid_loss))
+print("Best Validation Performance:")
+print("    mse: {:.2e}, IC: {:.2e}, RIC: {:.2e}, prec@10: {:.2e}, SR: {:.2e}".format(
+    best_valid_perf['mse'], best_valid_perf['IC'], best_valid_perf['RIC'],
+    best_valid_perf['prec_10'], best_valid_perf['sharpe5']))
+print("Best Test Performance (corresponding to best validation):")
+print("    mse: {:.2e}, IC: {:.2e}, RIC: {:.2e}, prec@10: {:.2e}, SR: {:.2e}".format(
+    best_test_perf['mse'], best_test_perf['IC'], best_test_perf['RIC'],
+    best_test_perf['prec_10'], best_test_perf['sharpe5']))
+
+
+# Finish the wandb run
+wandb.finish()
