@@ -1,6 +1,10 @@
 
 # Election Day Stock Market Forecasting (EDSMF)
 
+## Main Reference
+
+Our code was build on top of the excelent work StockMixer (https://github.com/SJTU-DMTai/StockMixer)
+
 ## Overview
 
 The **Election Day Stock Market Forecasting (EDSMF)** model aims to enhance stock market predictions during periods of high volatility, such as the United States presidential election. By integrating political signals, financial data, and advanced machine learning techniques, this project aims to capture both market dynamics and political influences, providing better forecasting accuracy for investors.
