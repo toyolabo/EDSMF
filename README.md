@@ -1,30 +1,75 @@
-# StockMixer
 
-Official code implementation and supplementary material of AAAI 2024 paper "**StockMixer: A Simple yet Strong MLP-based Architecture for Stock Price Forecasting**". This work proposes a lightweight and effective MLP-based architecture for stock price forecasting named StockMixer. It consists of indicator mixing, temporal mixing and stock mixing to capture complex correlations in the stock data. The end-to-end training flow of StockMixer is presented as follows:
+# Election Day Stock Market Forecasting (EDSMF)
 
-<img width="90%" src ="./framework.png"/>
+## Overview
 
-## Environment
+The **Election Day Stock Market Forecasting (EDSMF)** model aims to enhance stock market predictions during periods of high volatility, such as the United States presidential election. By integrating political signals, financial data, and advanced machine learning techniques, this project aims to capture both market dynamics and political influences, providing better forecasting accuracy for investors.
 
-- Python 3.7
-- torch~=1.10.1
-- numpy~=1.21.5
-- PyYAML, pandas, tqdm, matplotlib
+## Key Features
 
-## Dataset and Preprocessing
+- **Political Signal Integration**: The model incorporates political signals generated from news articles about candidates' economic plans, enhancing prediction accuracy during election periods.
+- **High-Frequency Trading Focus**: Unlike traditional models, EDSMF operates on a high-frequency trading setup with 1-minute interval data for all S&P 500 stocks during the U.S. presidential election period (30/10/2024 - 06/11/2024).
+- **Granular Analysis**: The model captures detailed stock movement patterns by leveraging normalized stock indicators like open, high, low, close, volume, and Exponential Moving Average (EMA).
+- **State-of-the-Art Forecasting**: Built on the \textit{StockMixer} (https://github.com/SJTU-DMTai/StockMixer) model, EDSMF combines established forecasting techniques with political awareness to predict market behavior with high accuracy.
 
-The original datasets(NASDAQ, NYSE and S&P500) are respectively available:
+## Installation
 
-NASDAQ/NYSE: [Temporal Relational Ranking for Stock Prediction](https://github.com/fulifeng/Temporal_Relational_Stock_Ranking)
+### Prerequisites
 
-S&P500: [Efficient Integration of Multi-Order Dynamics and Internal Dynamics in Stock Movement Prediction](https://github.com/thanhtrunghuynh93/estimate)
+- Python 3.8+
+- Required libraries: `tensorflow`, `pytorch`, `pandas`, `numpy`, `sklearn`, `requests`, `beautifulsoup4`, and others. See `requirements.txt` for full list.
 
-In order to improve file reading speed, we process the raw data to generate corresponding .pkl or .npy files. Datasets are provided in the `dataset` folder. Because StockMixer does not require prior knowledge similar to graphs or hypergraphs, our preprocessed dataset did not provide either. You can find them from the original datasets.
+### Setup
 
-## Running the Code
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/your-username/EDSMF.git
+    cd EDSMF
+    ```
 
-```
-# edit configurations in train.py
-python src/train.py
-```
+2. Install dependencies:
+    ```bash
+    pip install -r requirements.txt
+    ```
 
+3. Prepare the dataset:
+    - The data is fetched through APIs or scraped from financial sources (details in the **Dataset** section).
+    - Ensure that your environment has access to high-frequency stock data (1-minute interval for S&P 500 during election periods).
+
+## Usage
+
+1. Run the training script:
+    ```bash
+    python train_model.py
+    ```
+
+2. To test the model:
+    ```bash
+    python predict.py --data test_data.csv
+    ```
+
+3. For evaluation:
+    ```bash
+    python evaluate.py --model saved_model --data test_data.csv
+    ```
+
+## Dataset
+
+- **Stock Data**: Historical stock data for all S&P 500 stocks is used with a 1-minute frequency between 30/10/2024 and 06/11/2024.
+- **Political Data**: News articles, economic plans, and political developments related to the U.S. presidential election are processed using a large language model (LLM)-driven agent.
+
+## Contributing
+
+We welcome contributions! Feel free to fork the repository, open issues, or submit pull requests.
+
+## License
+
+This project is licensed under the MIT License.
+
+---
+
+### Acknowledgements
+
+- \textit{StockMixer} framework for foundational stock forecasting techniques.
+- Large Language Model (LLM)-driven agent for extracting political signals.
+- Various contributors and open-source libraries that made this project possible.
