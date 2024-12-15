@@ -14,11 +14,6 @@ The **Election Day Stock Market Forecasting (EDSMF)** model aims to enhance stoc
 
 ## Installation
 
-### Prerequisites
-
-- Python 3.8+
-- Required libraries: `tensorflow`, `pytorch`, `pandas`, `numpy`, `sklearn`, `requests`, `beautifulsoup4`, and others. See `requirements.txt` for full list.
-
 ### Setup
 
 1. Clone the repository:
