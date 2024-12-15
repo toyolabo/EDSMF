@@ -4,3 +4,4 @@ __pycache__/
 dataset/
 ALL.csv
 political_sentiment.csv
+.env
