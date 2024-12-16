@@ -19,7 +19,7 @@ stock_num = 497  # NASDAQ (1026) / SP500 (474) / SP500_2024 (497)
 lookback_length = 16
 epochs = 100
 valid_index = 1560  # NASDAQ (756) / SP500 (1006)
-test_index = 1948  # NASDAQ (756 + 252 = 1008) / SP500 (1006 + 253 = 1259)
+test_index = 1950  # NASDAQ (756 + 252 = 1008) / SP500 (1006 + 253 = 1259)
 fea_num = 11  # Number of features in consideration
 market_num = 8  # NASDAQ (20) / SP500 (8)
 steps = 1
@@ -29,7 +29,7 @@ scale_factor = 3
 activation = 'GELU'
 
 if fea_num > 8:
-    political = "-political-ensemble-20-Donald-80-Kamala"
+    political = "-political-ensemble-40-Donald-60-Kamala"
 else:
     political = ""
 
@@ -236,8 +236,8 @@ for epoch in range(epochs):
         model_B, valid_index, test_index, model_A=False)
 
     # Weighted ensemble for validation predictions
-    weight_A = 0.2  # Weight for candidate 1 (Trump)
-    weight_B = 0.8  # Weight for candidate 2 (Harris)
+    weight_A = 0.4  # Weight for candidate 1 (Trump)
+    weight_B = 0.6  # Weight for candidate 2 (Harris)
     val_ensemble_predictions = weight_A * val_predictions_A + weight_B * val_predictions_B
 
     # Evaluate the ensemble
