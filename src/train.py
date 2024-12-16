@@ -20,7 +20,7 @@ lookback_length = 16
 epochs = 100
 clip = 0 # SP500 (915)
 valid_index = 1560 # NASDAQ (756) / SP500 (1006)
-test_index = 1948 # NASDAQ (756 + 252 = 1008) / SP500 (1006 + 253 = 1259)
+test_index = 1950 # NASDAQ (756 + 252 = 1008) / SP500 (1006 + 253 = 1259)
 fea_num = 11 # Number of features in consideration
 market_num = 8 # NASDAQ (20) / SP500 (8)
 steps = 1
@@ -30,7 +30,7 @@ scale_factor = 3
 activation = 'GELU'
 
 if fea_num > 8:
-    political = "-political-new-architecure"
+    political = "-political-random"
 else:
     political = ""
 
@@ -49,8 +49,8 @@ wandb.config.update({
 
 dataset_path = '../dataset/' + market_name
 if market_name == "SP500":
-    # data = np.load('../dataset/SP500/my_SP500.npy')
-    # data = np.load('../dataset/SP500/reduced_sp500_2024.npy')
+    data = np.load('../dataset/SP500/reduced_sp500_2024_political.npy')
+    data = np.load('../dataset/SP500/reduced_sp500_2024_political.npy')
     data = np.load('../dataset/SP500/reduced_sp500_2024_political.npy')
     # data = data[:, 915:, :]
     data = data[:, clip:, :]
