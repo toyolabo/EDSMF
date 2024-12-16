@@ -1,0 +1,20 @@
+[project]
+name = "political_analyst"
+version = "0.1.0"
+description = "political-analyst using crewAI"
+authors = [{ name = "Your Name", email = "you@example.com" }]
+requires-python = ">=3.10,<=3.13"
+dependencies = [
+    "crewai[tools]>=0.86.0,<1.0.0"
+]
+
+[project.scripts]
+political_analyst = "political_analyst.main:run"
+run_crew = "political_analyst.main:run"
+train = "political_analyst.main:train"
+replay = "political_analyst.main:replay"
+test = "political_analyst.main:test"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

@@ -1,0 +1,75 @@
+news_analysis_task:
+  description: >
+    Review recent news articles about the presidential candidates {candidate1} and {candidate2}.
+    Focus on their latest policy announcements, campaign promises,
+    and significant developments. Create a comprehensive summary
+    of each candidate's current position and momentum. Also read the compilation
+    of news reports for {candidate1} and {candidate2} from {dates} at {news_reports_path}.
+  expected_output: >
+    A markdown-formatted analysis of recent political developments
+    for each major candidate, including key policy positions and campaign dynamics.
+  agent: news_analyst
+
+candidate_policy_task:
+  description: >
+    Analyze the PDF documents containing candidate positions.
+    The pdfs for {candidate1} and {candidate2} are at {candidate1_pdf_path} and {candidate2_pdf_path}.
+    Compare and contrast their stances on key issues including:
+    economic policy, taxation, regulation, trade, and industry-specific policies.
+  expected_output: >
+    A detailed markdown comparison of candidate positions on key economic issues,
+    highlighting major differences and potential policy impacts.
+  agent: candidate_analyst
+
+market_analysis_task:
+  description: >
+    Review all sectors in the S&P 500 listed in {sp500_sectors} and analyze how each sector might be
+    affected by different candidates' policies. Consider direct policy impacts,
+    regulatory changes, and indirect effects on business conditions.
+  expected_output: >
+    A sector-by-sector analysis of potential impacts under each candidate,
+    with clear rankings of which sectors would benefit most under each scenario.
+  agent: market_analyst
+
+final_synthesis_task:
+  description: >
+    Create a comprehensive report synthesizing all previous analyses.
+    Connect political positions to specific market outcomes and provide
+    clear conclusions about which sectors are best positioned under each
+    candidate's potential victory.
+  expected_output: >
+    A markdown report with the following structure:
+
+    # Election Impact Analysis Report
+
+    ## Executive Summary
+    [Brief overview of key findings]
+
+    ## Candidate Impact Analysis
+
+    ### {candidate1} Impact
+    #### Positively Impacted Sectors
+    - Sector 1
+      - Key policy drivers
+      - Expected impact magnitude
+    [Continue for all positive sectors]
+
+    #### Negatively Impacted Sectors
+    - Sector 1
+      - Key policy drivers
+      - Expected impact magnitude
+    [Continue for all negative sectors]
+
+    ### {candidate2} Impact
+    [Same structure as above for candidate2]
+
+    ## Sector-by-Sector Comparison Table
+    | Sector | {candidate1} Impact | {candidate2} Impact |
+    |--------|-------------------|-------------------|
+    | Energy | Positive/Negative | Positive/Negative |
+    [Continue for all sectors]
+
+    ## Investment Recommendations
+    - Under {candidate1} victory scenario
+    - Under {candidate2} victory scenario
+  agent: synthesis_analyst
